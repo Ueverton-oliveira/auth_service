@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::AuthController, type: :controller do
+RSpec.describe Api::V1::AuthController, type: :controller do
   let(:user) { create(:user, password: 'password123') }
   let(:token) { GenerateToken.call(user: user).token }
 
@@ -15,6 +15,27 @@ RSpec.describe Api::AuthController, type: :controller do
       post :login, params: { email: user.email, password: 'wrongpassword' }
       expect(response).to have_http_status(:unauthorized)
       expect(response.body).to include('Invalid email or password')
+    end
+  end
+
+  describe 'POST #register' do
+    context 'when valid params are passed' do
+      it 'registers a new user' do
+        post :register, params: { email: 'user@example.com', password: 'password' }
+#         binding.pry
+        expect(response).to have_http_status(:created)
+        expect(response.body).to include('User created successfully')
+        expect(response.body).to include('user@example.com')
+        expect(JSON.parse(response.body)['email']).to eq('user@example.com')
+      end
+    end
+
+    context 'when invalid params are passed' do
+      it 'does not register a new user' do
+        post :register, params: { email: '', password: 'password' }
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include('errors')
+      end
     end
   end
 
