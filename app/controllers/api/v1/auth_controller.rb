@@ -1,12 +1,13 @@
-class Api::AuthController < ApplicationController
+class Api::V1::AuthController < ApplicationController
   skip_before_action :authenticate_user!, only: [:register, :login, :validate_token]
 
   def register
-    user = User.new(user_params)
-    if user.save
-      render json: { message: 'User created successfully', user: user }, status: :created
+    @user = User.new(user_params)
+
+    if @user.save
+      render json: { id: @user.id, email: @user.email, message: 'User created successfully' }, status: :created
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -34,6 +35,6 @@ class Api::AuthController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:email, :password)
+    params.permit(:email, :password)
   end
 end
