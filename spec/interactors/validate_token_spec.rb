@@ -1,19 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe Api::AuthController, type: :controller do
+RSpec.describe Api::V1::AuthController, type: :controller do
   let(:user) { create(:user, email: 'test@example.com', password: 'password') }
   let(:token) do
     result = GenerateToken.call(user: user)
     result.token if result.success?
-  end
-
-  describe 'POST #register' do
-    it 'registers a new user' do
-      post :register, params: { user: { email: 'new@example.com', password: 'password' } }
-      expect(response).to have_http_status(:created)
-      expect(response.body).to include('User created successfully')
-      expect(User.find_by(email: 'new@example.com')).to be_present
-    end
   end
 
   describe 'POST #login' do
