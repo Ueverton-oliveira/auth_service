@@ -26,7 +26,7 @@ class Api::V1::AuthController < ApplicationController
     result = ValidateToken.call(token: params[:token])
 
     if result.success?
-      render json: { user_id: result.user.id }, status: :ok
+      render json: { user_id: result.user.id, email: result.user.email, name: result.user.name }, status: :ok
     else
       render json: { error: result.message }, status: :unauthorized
     end
@@ -35,6 +35,6 @@ class Api::V1::AuthController < ApplicationController
   private
 
   def user_params
-    params.permit(:email, :password)
+    params.permit(:email, :password, :name)
   end
 end
