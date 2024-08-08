@@ -131,7 +131,7 @@ Para rodar os testes, use o seguinte comando:
 ### Configuração Manual
 
 ```bash
-rails test
+rspec
 ```
 <img width="469" alt="image" src="https://github.com/user-attachments/assets/cceabcb7-c322-48fc-868a-caad83b7d63f">
 
